@@ -30,7 +30,7 @@ if check_file_exists "$aws_bin" "$gemfile_s3_file_path" -eq 0; then
   echo "nothing";
 else
   echo $tmp_dir
-  tar -cf "${tmp_dir}/${gemfile_checksum}.tar" -C $build_dir/vendor/bundle .
+  tar -cf "${tmp_dir}/${gemfile_checksum}.tar" -C $cache_dir .
   echo "tar done"
   upload_file "$aws_bin" "${tmp_dir}/${gemfile_checksum}.tar" "$gemfile_s3_file_path"
   echo "upload done"
