@@ -19,7 +19,6 @@ curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o $tmp_dir/a
 unzip -qq -d $tmp_dir $tmp_dir/aws.zip
 rm $tmp_dir/aws.zip
 chmod +x $tmp_dir/aws/dist/aws
-mkdir -p $build_dir/vendor/cache
 
 aws_bin=$tmp_dir/aws/dist/aws
 
@@ -28,7 +27,11 @@ aws_bundle_cache_path=$(get_env_variable ${env_dir} "AWS_BUNDLE_CACHE_PATH")
 gemfile_s3_file_path="${aws_bundle_cache_path}/${gemfile_checksum}.tar"
 
 if check_file_exists "$aws_bin" "$gemfile_s3_file_path" -eq 0; then
-  download_file "$aws_bin" "$gemfile_s3_file_path" "${tmp_dir}/bundle_cache.tar"
-  tar -xvf "${tmp_dir}/bundle_cache.tar" -C "${build_dir}/vendor/cache"
-  rm $tmp_dir/bundle_cache.tar
+  echo "nothing";
+else
+  echo $tmp_dir
+  tar -cf "${tmp_dir}/${gemfile_checksum}.tar" -C $build_dir/vendor/bundle .
+  echo "tar done"
+  upload_file "$aws_bin" "${tmp_dir}/${gemfile_checksum}.tar" "$gemfile_s3_file_path"
+  echo "upload done"
 fi

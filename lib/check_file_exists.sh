@@ -12,11 +12,11 @@ check_file_exists () {
 
   local status=$?
 
-  if [[ status -eq 0 ]]; then
-    echo "File already exists in S3."
-  else
-    echo "File does not exist in S3."
-  fi
+  # if [[ status -eq 0 ]]; then
+  #   echo "File already exists in S3."
+  # else
+  #   echo "File does not exist in S3."
+  # fi
 
   return $status
 }
