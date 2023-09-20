@@ -27,11 +27,17 @@ aws_bundle_cache_path=$(get_env_variable ${env_dir} "AWS_BUNDLE_CACHE_PATH")
 gemfile_s3_file_path="${aws_bundle_cache_path}/${gemfile_checksum}.tar.gz"
 
 if check_file_exists "$aws_bin" "$gemfile_s3_file_path" -eq 0; then
-  echo "nothing";
+  echo "Gemfile cache already exists; no further action required." | indent
 else
-  echo $tmp_dir
-  tar -czf "${tmp_dir}/${gemfile_checksum}.tar.gz" -C $cache_dir .
-  echo "tar done"
-  upload_file "$aws_bin" "${tmp_dir}/${gemfile_checksum}.tar.gz" "$gemfile_s3_file_path"
-  echo "upload done"
+  if tar -czf "${tmp_dir}/${gemfile_checksum}.tar.gz" -C $cache_dir .
+    echo "Gemfile cache creation completed." | indent
+
+    if upload_file "$aws_bin" "${tmp_dir}/${gemfile_checksum}.tar.gz" "$gemfile_s3_file_path"
+      echo "Gemfile cache upload completed." | indent
+    else
+      echo "Gemfile cache upload failed." | indent
+    fi
+  else
+    echo "Gemfile cache creation failed." | indent
+  fi
 fi
