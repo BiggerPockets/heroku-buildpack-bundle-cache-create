@@ -29,7 +29,7 @@ gemfile_s3_file_path="${aws_bundle_cache_path}/${gemfile_checksum}.tar.gz"
 if check_file_exists "$aws_bin" "$gemfile_s3_file_path" -eq 0; then
   echo "Gemfile cache already exists; no further action required." | indent
 else
-  if tar -czf "${tmp_dir}/${gemfile_checksum}.tar.gz" -C $cache_dir .; then
+  if tar -czf "${tmp_dir}/${gemfile_checksum}.tar.gz" -C "$cache_dir/heroku-22" .; then
     echo "Gemfile cache creation completed." | indent
 
     if upload_file "$aws_bin" "${tmp_dir}/${gemfile_checksum}.tar.gz" "$gemfile_s3_file_path"; then
